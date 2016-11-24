@@ -6,7 +6,7 @@
         android:height="3dp">
     </size>
     <solid
-        android:color="@android:color/black">
+        android:color="#f3355e">
     </solid>
 
 </shape>

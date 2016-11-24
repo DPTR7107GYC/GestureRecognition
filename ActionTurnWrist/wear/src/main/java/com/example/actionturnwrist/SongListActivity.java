@@ -156,7 +156,7 @@ public class SongListActivity extends Activity implements SensorEventListener {
     }
 
     public int numUpChange(int Num){
-        if(Num<5) {
+        if(Num<4) {
             numed=Num;
             Num++;
         }
@@ -173,7 +173,7 @@ public class SongListActivity extends Activity implements SensorEventListener {
         }
         else {
             numed=Num;
-            Num = 5;
+            Num = 4;
         }
         return Num;
     }

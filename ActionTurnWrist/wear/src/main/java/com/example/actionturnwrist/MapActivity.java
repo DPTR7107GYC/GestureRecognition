@@ -14,6 +14,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -35,7 +36,7 @@ public class MapActivity extends Activity implements SensorEventListener {
     public static final int RESULT_CODE_NOFOUND = 200;
 
 
-
+    private ImageView fixedPosition;
 
 
     private double Lat;
@@ -84,7 +85,7 @@ public class MapActivity extends Activity implements SensorEventListener {
 //        imgView = (ImageView) findViewById(R.id.imageiew1);// 获取控件
 //        imgView.setImageBitmap(bitmap);// 填充控件
         flag=0;
-        Switch=false;
+        Switch=true;
 
 //        dm = new DisplayMetrics();
 //        getWindowManager().getDefaultDisplay().getMetrics(dm);// 获取分辨率
@@ -102,8 +103,8 @@ public class MapActivity extends Activity implements SensorEventListener {
 
 
     private void init() {
-        Lat=39.968237;//纬度
-        Lng=116.367655;//经度
+        Lat=39.964386;//纬度
+        Lng=116.36752;//经度
         mMapView = (MapView) findViewById(R.id.bmapview);
         bdMap = mMapView.getMap();
         cenpt = new LatLng(Lat,Lng);
@@ -127,6 +128,9 @@ public class MapActivity extends Activity implements SensorEventListener {
         linearAccelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 //        sensorManager.registerListener(this,accelerationSensor,SensorManager.SENSOR_DELAY_FASTEST);
+
+        fixedPosition = (ImageView)findViewById(R.id.fixedPosition);
+        fixedPosition.setImageResource(R.drawable.fixposition);
     }
 
 //    private void iniView(){
@@ -259,6 +263,7 @@ public class MapActivity extends Activity implements SensorEventListener {
             case Sensor.TYPE_ACCELEROMETER:
                 if(Switch==false){
                     moveMap(event.values[0], event.values[1]);
+                    fixedPosition.setVisibility(View.INVISIBLE);
 //                    center();
                 }
 //                else if (Switch==true){
@@ -289,6 +294,7 @@ public class MapActivity extends Activity implements SensorEventListener {
                 if(flag>=3&&flag<4&&SystemClock.elapsedRealtime()-curtime1>500){
                     flag=0;
                     System.out.println("YES");
+                    fixedPosition();
                     if (Switch)
                         Switch=false;
                     else
@@ -324,6 +330,17 @@ public class MapActivity extends Activity implements SensorEventListener {
         bdMap.setMapStatus(mMapStatusUpdate);
     }
 
+    public void fixedPosition(){
+        Lat=39.964386;
+        Lng=116.36752;
+        cenpt=new LatLng(Lat,Lng);
+        mMapStatus = new MapStatus.Builder().target(cenpt).build();
+        //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
+        mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+        //改变地图状态
+        bdMap.setMapStatus(mMapStatusUpdate);
+        fixedPosition.setVisibility(View.VISIBLE);
+    }
 
 
     public void  transformMap(float z){
